@@ -1,0 +1,49 @@
+{
+  "hash": "15b0fab8",
+  "configHash": "ee48f96f",
+  "lockfileHash": "d518f79d",
+  "browserHash": "e0259035",
+  "optimized": {
+    "react": {
+      "src": "../../../../../../../Users/davie/AppData/Local/Yarn/Berry/cache/react-npm-19.2.4-d29a5aac4d-10c0.zip/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "bf932d8d",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../.yarn/__virtual__/react-dom-virtual-436376a23f/6/Users/davie/AppData/Local/Yarn/Berry/cache/react-dom-npm-19.2.4-4921ae503e-10c0.zip/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "5b2c79fb",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../.yarn/__virtual__/react-router-dom-virtual-f0a534f4d8/6/Users/davie/AppData/Local/Yarn/Berry/cache/react-router-dom-npm-7.13.0-64be5b6151-10c0.zip/node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "2f17de69",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../.yarn/__virtual__/lucide-react-virtual-40ffea4b24/6/Users/davie/AppData/Local/Yarn/Berry/cache/lucide-react-npm-0.563.0-62353e14d5-10c0.zip/node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "14d79b83",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../../../../../../Users/davie/AppData/Local/Yarn/Berry/cache/axios-npm-1.13.5-ed8865f696-10c0.zip/node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "05f5a118",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-7CKABU5F": {
+      "file": "chunk-7CKABU5F.js"
+    },
+    "chunk-ZH3DXDLZ": {
+      "file": "chunk-ZH3DXDLZ.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
