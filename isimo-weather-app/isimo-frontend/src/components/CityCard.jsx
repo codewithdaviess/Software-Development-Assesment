@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNotification } from "../context/NotificationContext";
 import { getWeather, getForecast, createLocation, updateLocation } from "../services/api";
-import { Heart, Trash2, Save, Edit2, X } from "lucide-react";
+import { Heart, Trash2, Save, Edit2 } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const weatherIcons = {
   sunny: "☀️",
@@ -14,6 +15,7 @@ const weatherIcons = {
 
 export default function CityCard({ city, onFavorite, onDelete, showSearchHeading = false, isSearchResult = false }) {
   const { addNotification } = useNotification();
+  const { t } = useLanguage();
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -50,16 +52,16 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
         longitude: city.longitude,
       });
       setSaved(true);
-      addNotification("Added to tracking", "success", 3000);
+      addNotification(t.addedTracking, "success", 3000);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {
       if (error.response?.status === 409 || error.message?.includes("duplicate") || error.message?.includes("already")) {
         setSaved(true);
-        addNotification("Added to tracking", "success", 3000);
+        addNotification(t.addedTracking, "success", 3000);
         setTimeout(() => setSaved(false), 2000);
       } else {
         console.error("Error saving location:", error);
-        addNotification("Error saving location", "error", 3000);
+        addNotification(t.errorSavingLocation, "error", 3000);
       }
     } finally {
       setSaving(false);
@@ -73,10 +75,10 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
       await updateLocation(city.id, { name: editedName });
       city.name = editedName;
       setIsEditing(false);
-      addNotification("Location renamed", "success", 3000);
+      addNotification(t.locationRenamed, "success", 3000);
     } catch (error) {
       console.error("Error updating location:", error);
-      addNotification("Error updating location", "error", 3000);
+      addNotification(t.errorUpdatingLocation, "error", 3000);
     } finally {
       setIsSavingEdit(false);
     }
@@ -104,7 +106,7 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
     <div className="w-full">
       {showSearchHeading && (
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          🔍 Search results for: <span className="text-[#5896FD]">{city.name}</span>
+          🔍 {t.searchResultsFor}: <span className="text-[#5896FD]">{city.name}</span>
         </h2>
       )}
 
@@ -135,28 +137,26 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
               className="flex-1 px-3 py-2 border border-[#5896FD] rounded-lg text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#5896FD]"
-              placeholder="Enter location name"
+              placeholder={t.enterLocationName}
             />
             <div className="flex gap-2">
               <button
                 onClick={handleSaveEdit}
                 disabled={isSavingEdit}
                 className="flex-1 sm:flex-none px-3 py-2 bg-green-500 text-white text-sm rounded-lg font-semibold hover:bg-green-600 disabled:opacity-50 transition-all"
-              >
-                Save
+              >{t.save}
               </button>
               <button
                 onClick={handleCancelEdit}
                 className="flex-1 sm:flex-none px-3 py-2 bg-gray-400 text-white text-sm rounded-lg font-semibold hover:bg-gray-500 transition-all"
-              >
-                Cancel
+              >{t.cancel}
               </button>
             </div>
           </div>
         ) : (
           <h3 className="text-lg font-medium text-gray-800 mt-4">
             {city.name}, {city.country}
-            {!showSearchHeading && <span className="text-xs text-gray-400 ml-2">Click to manage</span>}
+            {!showSearchHeading && <span className="text-xs text-gray-400 ml-2">{t.clickToManage}</span>}
           </h3>
         )}
 
@@ -209,7 +209,7 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
                 } disabled:opacity-50`}
               >
                 <Save className="w-3 h-3" />
-                <span>{saved ? "Saved!" : saving ? "Saving..." : "Save"}</span>
+                <span>{saved ? t.saved : saving ? t.saving : t.save}</span>
               </button>
             )}
 
@@ -226,7 +226,7 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
                 }`}
               >
                 <Heart className="w-3 h-3" />
-                <span>{city.is_favorite ? "Fav" : "Favorite"}</span>
+                <span>{city.is_favorite ? t.fav : t.favorite}</span>
               </button>
             )}
 
@@ -239,7 +239,7 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
                 className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all"
               >
                 <Edit2 className="w-3 h-3" />
-                <span>Edit</span>
+                <span>{t.edit}</span>
               </button>
             )}
 
@@ -252,7 +252,7 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
                 className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-all"
               >
                 <Trash2 className="w-3 h-3" />
-                <span>Delete</span>
+                <span>{t.delete}</span>
               </button>
             )}
           </div>

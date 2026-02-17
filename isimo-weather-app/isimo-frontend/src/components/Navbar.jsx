@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Sun, Moon } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [theme, setTheme] = useState("light");
-  const location = useLocation(); // get current URL path
+  const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     // Initialize theme from localStorage or system preference
@@ -38,13 +40,13 @@ export default function Navbar() {
   };
 
   const links = [
-    { name: "Home", path: "/" },
-    { name: "Tracked Cities", path: "/tracked-cities" },
-    { name: "Favorites", path: "/favorites" },
+    { name: t.home, path: "/" },
+    { name: t.trackedCities, path: "/tracked-cities" },
+    { name: t.favorites, path: "/favorites" },
   ];
 
   return (
-    <nav className="w-full bg-white fixed top-0 left-0 z-50">
+    <nav className="w-full bg-white/95 backdrop-blur fixed top-0 left-0 z-50 border-b border-slate-100">
       <div className="max-w-6xl mx-auto px-6 py-3 sm:px-8 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
         <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#5896FD] to-[#AECDFF]">
@@ -56,20 +58,31 @@ export default function Navbar() {
           <button
             onClick={() => toggleTheme()}
             aria-label="Toggle theme"
-            className="p-2 rounded-full hover:bg-gray-50 shadow-md"
+            className="p-2 rounded-full hover:bg-slate-100 shadow-sm"
           >
             {theme === "dark" ? (
-              <Sun className="w-5 h-5 text-gray-700" />
-            ) : (
-              <Moon className="w-5 h-5 text-gray-700" />
-            )}
+                <Sun className="w-5 h-5 text-slate-700" />
+              ) : (
+                <Moon className="w-5 h-5 text-slate-700" />
+              )}
           </button>
+
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            aria-label={t.language}
+            className="rounded-lg border border-slate-200 px-2 py-1 text-sm text-slate-700 bg-white shadow-sm"
+          >
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+            <option value="fr">FR</option>
+          </select>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-3 rounded-full hover:bg-gray-50 shadow-md"
+            className="p-3 rounded-full hover:bg-slate-100 shadow-sm"
           >
-            <Menu className="w-6 h-6 text-gray-700" />
+            <Menu className="w-6 h-6 text-slate-700" />
           </button>
         </div>
       </div>
@@ -85,14 +98,14 @@ export default function Navbar() {
         <div className="flex justify-end p-4">
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 rounded-full hover:bg-gray-100"
+            className="p-2 rounded-full hover:bg-slate-100"
           >
-            <X className="w-6 h-6 text-gray-700" />
+            <X className="w-6 h-6 text-slate-700" />
           </button>
         </div>
 
         {/* Menu items */}
-        <ul className="flex flex-col space-y-4 p-6 text-gray-700">
+        <ul className="flex flex-col space-y-4 p-6 text-slate-700">
           {links.map((link) => {
             const isActive = location.pathname === link.path;
             return (
@@ -101,7 +114,7 @@ export default function Navbar() {
                   to={link.path}
                   onClick={() => setIsOpen(false)}
                   className={`font-medium hover:text-blue-600 ${
-                    isActive ? "text-blue-600 underline" : "text-gray-700"
+                    isActive ? "text-blue-600 underline" : "text-slate-700"
                   }`}
                 >
                   {link.name}
@@ -121,7 +134,7 @@ export default function Navbar() {
               ) : (
                 <Moon className="w-4 h-4" />
               )}
-              <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
+              <span>{theme === "dark" ? t.lightMode : t.darkMode}</span>
             </button>
           </li>
         </ul>
