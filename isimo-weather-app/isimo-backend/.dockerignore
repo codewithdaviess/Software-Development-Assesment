@@ -1,0 +1,14 @@
+node_modules
+.git
+.vscode
+.idea
+npm-debug.log
+yarn-error.log
+.env
+.pnp.cjs
+.pnp.loader.mjs
+.yarn/install-state.gz
+.yarn/unplugged
+coverage
+tests
+docs

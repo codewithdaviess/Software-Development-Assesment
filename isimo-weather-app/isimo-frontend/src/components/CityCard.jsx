@@ -1,21 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { useNotification } from "../context/NotificationContext";
-import { getWeather, getForecast, createLocation, updateLocation } from "../services/api";
+import {
+  getWeather,
+  getForecast,
+  createLocation,
+  updateLocation,
+} from "../services/api";
 import { Heart, Trash2, Save, Edit2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
 const weatherIcons = {
-  sunny: "☀️",
-  cloudy: "☁️",
-  rainy: "🌧️",
-  storm: "⛈️",
-  snowy: "❄️",
-  fog: "🌫️",
+  clear: "\u2600\ufe0f",
+  sunny: "\u2600\ufe0f",
+  clouds: "\u2601\ufe0f",
+  cloudy: "\u2601\ufe0f",
+  rain: "\ud83c\udf27\ufe0f",
+  rainy: "\ud83c\udf27\ufe0f",
+  drizzle: "\ud83c\udf27\ufe0f",
+  thunderstorm: "\u26c8\ufe0f",
+  storm: "\u26c8\ufe0f",
+  snow: "\u2744\ufe0f",
+  snowy: "\u2744\ufe0f",
+  mist: "\ud83c\udf2b\ufe0f",
+  fog: "\ud83c\udf2b\ufe0f",
+  haze: "\ud83c\udf2b\ufe0f",
 };
 
-export default function CityCard({ city, onFavorite, onDelete, showSearchHeading = false, isSearchResult = false }) {
+function normalizeWeatherType(type) {
+  if (!type) return "clear";
+
+  const t = type.toLowerCase();
+
+  if (t.includes("cloud")) return "clouds";
+  if (t.includes("rain")) return "rain";
+  if (t.includes("drizzle")) return "drizzle";
+  if (t.includes("storm") || t.includes("thunder")) return "thunderstorm";
+  if (t.includes("snow")) return "snow";
+  if (t.includes("fog") || t.includes("mist") || t.includes("haze")) return "mist";
+  if (t.includes("clear")) return "clear";
+
+  return "clear";
+}
+
+export default function CityCard({
+  city,
+  onFavorite,
+  onDelete,
+  showSearchHeading = false,
+  isSearchResult = false,
+}) {
   const { addNotification } = useNotification();
   const { t } = useLanguage();
+
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -31,7 +67,6 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
       try {
         const weatherRes = await getWeather(city.name);
         const forecastRes = await getForecast(city.name);
-
         setWeather(weatherRes.data.data);
         setForecast(forecastRes.data.data);
       } catch (error) {
@@ -51,11 +86,16 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
         latitude: city.latitude,
         longitude: city.longitude,
       });
+
       setSaved(true);
       addNotification(t.addedTracking, "success", 3000);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {
-      if (error.response?.status === 409 || error.message?.includes("duplicate") || error.message?.includes("already")) {
+      if (
+        error.response?.status === 409 ||
+        error.message?.includes("duplicate") ||
+        error.message?.includes("already")
+      ) {
         setSaved(true);
         addNotification(t.addedTracking, "success", 3000);
         setTimeout(() => setSaved(false), 2000);
@@ -70,6 +110,7 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
 
   const handleSaveEdit = async () => {
     if (!editedName.trim()) return;
+
     try {
       setIsSavingEdit(true);
       await updateLocation(city.id, { name: editedName });
@@ -90,81 +131,87 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
   };
 
   const selectedDay = forecast[selectedIndex] || {};
+  const rawType = selectedDay.type || weather?.weatherType || weather?.weather?.[0]?.main;
+  const normalizedType = normalizeWeatherType(rawType);
+  const icon = weatherIcons[normalizedType] || "\u2600\ufe0f";
 
-  const icon =
-    weatherIcons[selectedDay.type?.toLowerCase()] ||
-    weatherIcons[weather?.weatherType?.toLowerCase()] ||
-    "☀️";
-
-  const temp = selectedDay.temp !== undefined
-    ? Math.round(selectedDay.temp)
-    : weather?.main?.temp !== undefined
-    ? Math.round(weather.main.temp)
-    : "--";
+  const temp =
+    selectedDay.temp !== undefined
+      ? Math.round(selectedDay.temp)
+      : weather?.main?.temp !== undefined
+      ? Math.round(weather.main.temp)
+      : "--";
 
   return (
-    <div className="w-full">
+    <div className="bg-white w-full">
       {showSearchHeading && (
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          🔍 {t.searchResultsFor}: <span className="text-[#5896FD]">{city.name}</span>
+          {"\ud83d\udd0d"} {t.searchResultsFor}: <span className="text-[#5896FD]">{city.name}</span>
         </h2>
       )}
 
-      <div 
+      <div
         onClick={() => !showSearchHeading && setIsExpanded(!isExpanded)}
-        className={`bg-white rounded-xl shadow-lg border border-[#5896FD] p-6 w-full ${!showSearchHeading && 'cursor-pointer hover:shadow-xl transition-shadow'}`}
+        className={`rounded-xl shadow-lg border border-[#5896FD]/20 p-6 w-full ${
+          !showSearchHeading && "cursor-pointer hover:shadow-xl transition-shadow"
+        }`}
       >
-        {/* Top Row */}
         <div className="flex items-start space-x-4">
           <span className="text-5xl">{icon}</span>
-          <span className="text-4xl font-bold">{temp}°</span>
+          <span className="text-4xl font-bold">{temp}{"\u00b0"}</span>
 
           <div className="flex flex-col">
             <span className="font-semibold text-lg">
-              {selectedDay.type ?? weather?.weatherType ?? "N/A"}
+              {selectedDay.type ?? weather?.weatherType ?? weather?.weather?.[0]?.main ?? "N/A"}
             </span>
             <span className="text-gray-500 text-sm capitalize">
-              {selectedDay.description ?? weather?.description ?? "N/A"}
+              {selectedDay.description ??
+                weather?.description ??
+                weather?.weather?.[0]?.description ??
+                "N/A"}
             </span>
           </div>
         </div>
 
-        {/* City + Country */}
         {isEditing ? (
-          <div className="mt-4 flex flex-col sm:flex-row gap-2 w-full">
+          <div className="mt-4 flex flex-col gap-2 w-full">
             <input
               type="text"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
-              className="flex-1 px-3 py-2 border border-[#5896FD] rounded-lg text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#5896FD]"
+              className="w-full px-3 py-2 border border-[#5896FD] rounded-lg text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#5896FD]"
               placeholder={t.enterLocationName}
             />
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 w-full">
               <button
                 onClick={handleSaveEdit}
                 disabled={isSavingEdit}
-                className="flex-1 sm:flex-none px-3 py-2 bg-green-500 text-white text-sm rounded-lg font-semibold hover:bg-green-600 disabled:opacity-50 transition-all"
-              >{t.save}
+                className="w-full px-3 py-2 bg-green-500 text-white text-sm rounded-lg font-semibold hover:bg-green-600 disabled:opacity-50 transition-all"
+              >
+                {t.save}
               </button>
               <button
                 onClick={handleCancelEdit}
-                className="flex-1 sm:flex-none px-3 py-2 bg-gray-400 text-white text-sm rounded-lg font-semibold hover:bg-gray-500 transition-all"
-              >{t.cancel}
+                className="w-full px-3 py-2 bg-gray-400 text-white text-sm rounded-lg font-semibold hover:bg-gray-500 transition-all"
+              >
+                {t.cancel}
               </button>
             </div>
           </div>
         ) : (
           <h3 className="text-lg font-medium text-gray-800 mt-4">
             {city.name}, {city.country}
-            {!showSearchHeading && <span className="text-xs text-gray-400 ml-2">{t.clickToManage}</span>}
+            {!showSearchHeading && (
+              <span className="text-xs text-gray-400 ml-2">{t.clickToManage}</span>
+            )}
           </h3>
         )}
 
-        {/* Forecast */}
         {forecast.length > 0 && (
-          <div className="flex flex-wrap justify-center lg:justify-between gap-2 mt-4">
+          <div className="flex bg-white flex-wrap justify-center lg:justify-between gap-2 mt-4">
             {forecast.slice(0, 5).map((day, index) => {
               const isActive = index === selectedIndex;
+              const dayIcon = weatherIcons[normalizeWeatherType(day.type)] || "\u2600\ufe0f";
 
               return (
                 <div
@@ -173,18 +220,17 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
                     e.stopPropagation();
                     setSelectedIndex(index);
                   }}
-                  className={`flex flex-col items-center cursor-pointer transition-all
-                    ${
-                      isActive
-                        ? "bg-[#5896FD] text-white scale-105 shadow-md"
-                        : "bg-gray-100 hover:bg-gray-200"
-                    }
-                    rounded-full w-12 sm:w-14 lg:w-12 p-2 sm:p-3 lg:p-2 text-xs`}
+                  className={`flex flex-col items-center cursor-pointer transition-all ${
+                    isActive
+                      ? "bg-[#5896FD] text-white scale-105 shadow-md"
+                      : "bg-gray-200 text-slate-500 hover:text-white hover:bg-gray-400"
+                  } rounded-full w-12 sm:w-14 lg:w-12 p-2 sm:p-3 lg:p-2 text-xs`}
                 >
                   <span className="font-medium text-xs">{day.day}</span>
-                  <span className="text-lg sm:text-xl lg:text-lg">{weatherIcons[day.type?.toLowerCase()] || "☀️"}</span>
+                  <span className="text-lg sm:text-xl lg:text-lg">{dayIcon}</span>
                   <span className="font-semibold text-xs">
-                    {Math.round(day.temp)}°
+                    {Math.round(day.temp)}
+                    {"\u00b0"}
                   </span>
                 </div>
               );
@@ -192,7 +238,6 @@ export default function CityCard({ city, onFavorite, onDelete, showSearchHeading
           </div>
         )}
 
-        {/* Action Buttons */}
         {(isExpanded || showSearchHeading || isSearchResult) && !isEditing && (
           <div className="flex gap-1 mt-4 flex-wrap">
             {(showSearchHeading || isSearchResult) && (

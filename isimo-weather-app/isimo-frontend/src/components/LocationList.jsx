@@ -48,8 +48,8 @@ export default function LocationList() {
 
       setCities((prev) =>
         prev.map((c) =>
-          c.id === id ? { ...c, is_favorite: newFavoriteStatus } : c
-        )
+          c.id === id ? { ...c, is_favorite: newFavoriteStatus } : c,
+        ),
       );
 
       if (newFavoriteStatus) {
@@ -81,24 +81,28 @@ export default function LocationList() {
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 sm:p-6">
-      {cities.length > 0 && (
-        <h2 className="text-xl font-semibold text-slate-500 mb-6">{t.manageLocations}</h2>
-      )}
+    <div className="w-full bg-white">
+      <div className="w-full bg-white max-w-6xl mx-auto p-4 sm:p-6">
+        {cities.length > 0 && (
+          <h2 className="text-2xl text-center font-semibold text-slate-500 mb-6">
+            {t.manageLocations}
+          </h2>
+        )}
 
-      {cities.length === 0 && (
-        <p className="text-slate-500">{t.noCitiesYet}</p>
-      )}
+        {cities.length === 0 && (
+          <p className="text-slate-500">{t.noCitiesYet}</p>
+        )}
 
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {cities.map((city) => (
-          <CityCard
-            key={city.id}
-            city={city}
-            onFavorite={handleFavorite}
-            onDelete={handleDelete}
-          />
-        ))}
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {cities.map((city) => (
+            <CityCard
+              key={city.id}
+              city={city}
+              onFavorite={handleFavorite}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

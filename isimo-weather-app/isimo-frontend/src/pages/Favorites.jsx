@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { RotateCcw } from "lucide-react";
 import CityCard from "../components/CityCard";
-import { getFavoriteLocations, updateLocation, deleteLocation } from "../services/api";
+import {
+  getFavoriteLocations,
+  updateLocation,
+  deleteLocation,
+} from "../services/api";
 import { useNotification } from "../context/NotificationContext";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -40,7 +44,9 @@ function Favorites() {
 
       await updateLocation(id, { ...city, is_favorite: newFavoriteStatus });
 
-      setFavorites((prev) => prev.filter((c) => (c.id === id ? !newFavoriteStatus : true)));
+      setFavorites((prev) =>
+        prev.filter((c) => (c.id === id ? !newFavoriteStatus : true)),
+      );
 
       if (!newFavoriteStatus) {
         addNotification(t.removedFavorites, "success", 3000);
@@ -68,13 +74,15 @@ function Favorites() {
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full bg-white min-h-screen">
       <div className="w-full pt-24 pb-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center bg-gradient-to-r from-blue-500 to-sky-400 rounded-2xl shadow-xl p-8 sm:p-12 justify-between">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white">{t.favoriteCities}</h1>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center p-8 sm:p-12 gap-4">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-400">
+            {t.favorites}
+          </h1>
           <button
             onClick={fetchFavorites}
-            className="flex items-center gap-2 px-4 py-2 bg-white text-blue-500 rounded-lg font-semibold hover:bg-blue-50 transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-all"
           >
             <RotateCcw className="w-4 h-4" />
             {t.refresh}
@@ -82,7 +90,7 @@ function Favorites() {
         </div>
       </div>
 
-      <div className="w-full bg-slate-50 py-8">
+      <div className="w-full  py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           {favorites.length === 0 ? (
             <p className="text-slate-500">{t.noFavorites}</p>

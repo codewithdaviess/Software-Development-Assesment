@@ -52,14 +52,16 @@ function TrackedCities() {
   };
 
   return (
-    <div className="w-full">
-      <div className="w-full bg-gradient-to-b from-blue-50 to-slate-50 pt-20 pb-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-12 border border-slate-100">
+    <div className="w-full bg-white pt-20 pb-8">
+      <div className=" flex items-center justify-center px-4 sm:px-6">
+        <div className="max-w-6xl w-full">
+          <div className="bg-white rounded-2xl p-8 sm:p-12 border-slate-100 relative flex flex-col items-center">
             <h1 className="text-3xl sm:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-400">
               {t.addManageTracked}
             </h1>
-            <p className="mb-6 text-slate-500 sm:text-lg">{t.trackedSubtitle}</p>
+            <p className="mb-6 text-slate-500 sm:text-lg">
+              {t.trackedSubtitle}
+            </p>
 
             {!searchResults && (
               <div className="flex flex-col sm:flex-row gap-4 items-center">
@@ -104,7 +106,8 @@ function TrackedCities() {
             {searchResults.length > 1 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
                 <h2 className="text-2xl font-bold text-slate-800 mb-4">
-                  {t.resultsFor}: <span className="text-blue-500">{cityInput}</span>
+                  {t.resultsFor}:{" "}
+                  <span className="text-blue-500">{cityInput}</span>
                 </h2>
 
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-4">
@@ -128,7 +131,9 @@ function TrackedCities() {
       <div className="w-full bg-white py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-slate-800">{count} {t.trackedCount}</h2>
+            <h2 className="text-2xl font-bold text-slate-800">
+              {count} {t.trackedCount}
+            </h2>
             <button
               onClick={fetchCount}
               disabled={loading}
