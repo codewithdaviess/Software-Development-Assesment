@@ -3,6 +3,7 @@ import { Search, RotateCcw } from "lucide-react";
 import { getLocations, searchCity } from "../services/api";
 import LocationList from "../components/LocationList";
 import CityCard from "../components/CityCard";
+import { useLanguage } from "../context/LanguageContext";
 
 function TrackedCities() {
   const [count, setCount] = useState(0);
@@ -10,6 +11,7 @@ function TrackedCities() {
   const [cityInput, setCityInput] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   const [error, setError] = useState("");
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchCount();
@@ -45,39 +47,38 @@ function TrackedCities() {
       setSearchResults(cities);
     } catch (err) {
       console.error(err);
-      setError("City not found. Please try again.");
+      setError(t.cityNotFound);
     }
   };
 
   return (
-    <div className="w-full">
-      {/* Header with Search Form */}
-      <div className="w-full bg-white pt-20 pb-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-12">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#5896FD] to-[#AECDFF]">
-              Add & Manage Tracked Cities
+    <div className="w-full bg-white pt-20 pb-8">
+      <div className=" flex items-center justify-center px-4 sm:px-6">
+        <div className="max-w-6xl w-full">
+          <div className="bg-white rounded-2xl p-8 sm:p-12 border-slate-100 relative flex flex-col items-center">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-400">
+              {t.addManageTracked}
             </h1>
-            <p className="mb-6 text-gray-500 sm:text-lg">
-              Search for a city to add to your tracked locations.
+            <p className="mb-6 text-slate-500 sm:text-lg">
+              {t.trackedSubtitle}
             </p>
 
             {!searchResults && (
               <div className="flex flex-col sm:flex-row gap-4 items-center">
                 <input
                   type="text"
-                  placeholder="Enter your city"
+                  placeholder={t.cityPlaceholder}
                   value={cityInput}
                   onChange={(e) => setCityInput(e.target.value)}
-                  className="p-3 rounded-xl w-full sm:w-80 border border-gray-200 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-md"
+                  className="p-3 rounded-xl w-full sm:w-80 border border-slate-200 focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm"
                 />
 
                 <button
                   onClick={handleCitySearch}
-                  className="flex items-center justify-center px-6 py-3 bg-[#5896FD] text-white rounded-xl font-semibold shadow-md hover:bg-blue-600 transition-all"
+                  className="flex items-center justify-center px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold shadow-sm hover:bg-blue-600 transition-all"
                 >
                   <Search className="w-5 h-5 mr-2" />
-                  Search
+                  {t.search}
                 </button>
               </div>
             )}
@@ -87,39 +88,39 @@ function TrackedCities() {
         </div>
       </div>
 
-      {/* Search Results */}
       {searchResults && (
-        <div className="w-full bg-gray-50 py-8">
+        <div className="w-full bg-slate-50 py-8">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             {searchResults.length === 1 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <CityCard city={searchResults[0]} showSearchHeading={true} />
+                <CityCard city={searchResults[0]} showSearchHeading />
                 <button
                   onClick={() => setSearchResults(null)}
-                  className="mt-6 px-4 py-2 bg-[#5896FD] text-white rounded-xl font-semibold hover:bg-blue-600 transition-all shadow-md"
+                  className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-all shadow-sm"
                 >
-                  ← Add another city
+                  ← {t.addAnotherCity}
                 </button>
               </div>
             )}
 
             {searchResults.length > 1 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Results for: <span className="text-[#5896FD]">{cityInput}</span>
+                <h2 className="text-2xl font-bold text-slate-800 mb-4">
+                  {t.resultsFor}:{" "}
+                  <span className="text-blue-500">{cityInput}</span>
                 </h2>
 
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-4">
                   {searchResults.map((city, index) => (
-                    <CityCard key={index} city={city} isSearchResult={true} />
+                    <CityCard key={index} city={city} isSearchResult />
                   ))}
                 </div>
 
                 <button
                   onClick={() => setSearchResults(null)}
-                  className="px-4 py-2 bg-[#5896FD] text-white rounded-xl font-semibold hover:bg-blue-600 transition-all shadow-md"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-all shadow-sm"
                 >
-                  ← Add another city
+                  ← {t.addAnotherCity}
                 </button>
               </div>
             )}
@@ -127,22 +128,22 @@ function TrackedCities() {
         </div>
       )}
 
-      {/* Manage Tracked Cities */}
       <div className="w-full bg-white py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">{count} Tracked Cities</h2>
+            <h2 className="text-2xl font-bold text-slate-800">
+              {count} {t.trackedCount}
+            </h2>
             <button
               onClick={fetchCount}
               disabled={loading}
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#5896FD] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-all disabled:opacity-50"
+              className="flex items-center gap-2 px-3 py-1.5 bg-blue-500 text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-all disabled:opacity-50"
             >
               <RotateCcw className="w-4 h-4" />
-              Refresh
+              {t.refresh}
             </button>
           </div>
 
-          {/* List of tracked locations */}
           <LocationList />
         </div>
       </div>
