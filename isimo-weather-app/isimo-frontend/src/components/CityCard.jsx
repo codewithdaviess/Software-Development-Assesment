@@ -209,7 +209,7 @@ export default function CityCard({
 
         {forecast.length > 0 && (
           <div className="flex bg-white flex-wrap justify-center lg:justify-between gap-2 mt-4">
-            {forecast.slice(0, 5).map((day, index) => {
+            {forecast.slice(1, 6).map((day, index) => {
               const isActive = index === selectedIndex;
               const dayIcon = weatherIcons[normalizeWeatherType(day.type)] || "\u2600\ufe0f";
 
