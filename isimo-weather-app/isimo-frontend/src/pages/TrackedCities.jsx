@@ -11,6 +11,7 @@ function TrackedCities() {
   const [cityInput, setCityInput] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   const [error, setError] = useState("");
+  const [lastSynced, setLastSynced] = useState(null);
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -21,8 +22,14 @@ function TrackedCities() {
     try {
       setLoading(true);
       const res = await getLocations();
-      const cities = Array.isArray(res.data) ? res.data : res.data.data || [];
+      const cities = Array.isArray(res.data)
+        ? res.data
+        : res.data.data || [];
+
       setCount(cities.length);
+
+      // Update sync time after successful fetch
+      setLastSynced(new Date());
     } catch (err) {
       console.error("Error fetching count:", err);
     } finally {
@@ -53,7 +60,7 @@ function TrackedCities() {
 
   return (
     <div className="w-full bg-white pt-20 pb-8">
-      <div className=" flex items-center justify-center px-4 sm:px-6">
+      <div className="flex items-center justify-center px-4 sm:px-6">
         <div className="max-w-6xl w-full">
           <div className="bg-white rounded-2xl p-8 sm:p-12 border-slate-100 relative flex flex-col items-center">
             <h1 className="text-3xl sm:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-sky-400">
@@ -131,9 +138,19 @@ function TrackedCities() {
       <div className="w-full bg-white py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-slate-800">
-              {count} {t.trackedCount}
-            </h2>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-800">
+                {count} {t.trackedCount}
+              </h2>
+
+              {lastSynced && (
+                <p className="text-sm text-slate-500 mt-1">
+                  {t.lastSynced || "Last synced"}:{" "}
+                  {lastSynced.toLocaleString()}
+                </p>
+              )}
+            </div>
+
             <button
               onClick={fetchCount}
               disabled={loading}
