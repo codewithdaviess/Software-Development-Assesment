@@ -2,7 +2,6 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-COPY .yarn ./.yarn
 RUN corepack enable && corepack prepare yarn@4.11.0 --activate
 RUN yarn install --immutable
 

@@ -5,7 +5,6 @@ ARG VITE_API_BASE_URL=http://localhost:5000/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
 COPY package.json yarn.lock ./
-COPY .yarn ./.yarn
 RUN corepack enable && corepack prepare yarn@4.11.0 --activate
 RUN yarn install --immutable
 
