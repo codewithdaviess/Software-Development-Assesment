@@ -36,7 +36,7 @@ This application demonstrates:
 ## 🛠️ Technology Stack
 
 ### Backend
-- **Runtime**: Node.js 16+
+- **Runtime**: Node.js 20+
 - **Framework**: Express.js
 - **Database**: PostgreSQL 12+
 - **HTTP Client**: Axios
@@ -116,8 +116,26 @@ software-development-assessment/
 
 ## 🚀 Setup Instructions
 
-### Prerequisites
-- Node.js 16+ and npm
+### Option A (Recommended for Assessment): Docker Compose
+
+```bash
+cd isimo-weather-app
+cp .env.example .env
+# add OPENWEATHER_API_KEY to .env
+docker compose up --build
+```
+
+Docker endpoints:
+- Frontend: `http://localhost:8080`
+- Backend API: `http://localhost:5000/api`
+- PostgreSQL: `localhost:5432`
+
+Detailed Docker guide: `isimo-weather-app/README.Docker.md`
+
+### Option B: Local Development (Yarn)
+
+#### Prerequisites
+- Node.js 20+ and Yarn 4 (via Corepack)
 - PostgreSQL 12+
 - OpenWeatherMap API Key (free at https://openweathermap.org/api)
 - Git
@@ -134,7 +152,7 @@ cd isimo-weather-app
 #### Install Dependencies
 ```bash
 cd isimo-backend
-npm install
+yarn install
 ```
 
 #### Database Setup
@@ -172,7 +190,7 @@ Get your API key:
 
 #### Start Backend Server
 ```bash
-npm start
+yarn start
 # Server runs on http://localhost:3000
 ```
 
@@ -191,18 +209,18 @@ Backend API endpoints available at:
 #### Install Dependencies
 ```bash
 cd ../isimo-frontend
-npm install
+yarn install
 ```
 
 #### Start Development Server
 ```bash
-npm run dev
+yarn dev
 # Frontend runs on http://localhost:5173
 ```
 
 #### Build for Production
 ```bash
-npm run build
+yarn build
 # Creates optimized build in dist/
 ```
 
@@ -327,7 +345,7 @@ Response:
 ### Run Backend Tests
 ```bash
 cd isimo-backend
-npm test
+yarn test
 ```
 
 Tests cover:
@@ -340,7 +358,7 @@ Tests cover:
 Frontend currently uses manual testing via UI. To add automated tests:
 ```bash
 cd isimo-frontend
-npm test
+yarn dev
 ```
 
 ## 🏛️ Architectural Decisions

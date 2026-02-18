@@ -2,14 +2,33 @@
 
 Complete step-by-step setup for the Isimo Weather App.
 
+## Fastest Path for Assessors (Docker)
+
+```bash
+cd isimo-weather-app
+cp .env.example .env
+# add OPENWEATHER_API_KEY to .env
+docker compose up --build
+```
+
+Docker endpoints:
+- Frontend: `http://localhost:8080`
+- Backend API: `http://localhost:5000/api`
+- PostgreSQL: `localhost:5432`
+
+Detailed Docker notes: `isimo-weather-app/README.Docker.md`
+
+## Local Development (Yarn + PostgreSQL)
+
 ## Prerequisites Check
 
 ```bash
-# Verify Node.js version (need 16+)
+# Verify Node.js version (need 20+)
 node --version
 
-# Verify npm version (need 8+)
-npm --version
+# Verify Yarn version (need 4.11.0+)
+corepack enable
+yarn --version
 
 # Verify PostgreSQL is installed and running
 psql --version
@@ -103,7 +122,7 @@ CREATE TABLE IF NOT EXISTS user_preferences (
 cd isimo-backend
 
 # Install dependencies
-npm install
+yarn install
 
 # Create .env file from template
 cp .env.example .env
@@ -128,7 +147,7 @@ OPENWEATHER_API_KEY=your_api_key_from_step_1
 
 ```bash
 # From isimo-backend directory
-npm start
+yarn start
 
 # Should output:
 # ✓ Server running on port 3000
@@ -149,7 +168,7 @@ curl http://localhost:3000/api/locations
 cd ../isimo-frontend
 
 # Install dependencies
-npm install
+yarn install
 ```
 
 No environment configuration needed for frontend.
@@ -158,7 +177,7 @@ No environment configuration needed for frontend.
 
 ```bash
 # From isimo-frontend directory
-npm run dev
+yarn dev
 
 # Should output:
 # ✓ Vite ready in 1000ms
@@ -189,7 +208,7 @@ kill -9 <PID>  # Mac/Linux
 taskkill /PID <PID> /F  # Windows
 
 # Try starting again
-npm start
+yarn start
 ```
 
 ### Database connection failed
@@ -218,8 +237,8 @@ cat .env | grep OPENWEATHER_API_KEY
 
 ```bash
 # Reinstall dependencies
-rm -rf node_modules package-lock.json
-npm install
+rm -rf node_modules .yarn/install-state.gz
+yarn install
 ```
 
 ### Port already in use
@@ -242,11 +261,11 @@ npm install
 ```bash
 # Backend tests
 cd isimo-backend
-npm test
+yarn test
 
 # Frontend tests (manual UI testing currently)
 cd ../isimo-frontend
-npm run dev  # Use browser dev tools
+yarn dev  # Use browser dev tools
 ```
 
 ## Common Tasks

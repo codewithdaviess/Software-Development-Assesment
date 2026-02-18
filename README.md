@@ -4,22 +4,30 @@ A full-stack weather tracking application integrating OpenWeatherMap API with Re
 
 ## 🎯 Quick Start
 
-See **[PROJECT_README.md](PROJECT_README.md)** for comprehensive documentation including:
-- Complete feature list
-- Setup instructions (backend + frontend + database)
-- API endpoints and examples
-- Database schema
-- Architectural decisions
-- Testing guide
+### Recommended for Assessors: Docker (2 minutes)
 
-### Quick Setup (5 minutes)
+```bash
+cd isimo-weather-app
+cp .env.example .env
+# add your OPENWEATHER_API_KEY in .env
+docker compose up --build
+```
+
+App endpoints (Docker):
+- Frontend: http://localhost:8080
+- Backend API: http://localhost:5000/api
+- Database: localhost:5432
+
+Full Docker instructions: **[isimo-weather-app/README.Docker.md](isimo-weather-app/README.Docker.md)**
+
+### Local Development Setup (5 minutes)
 
 **Backend:**
 ```bash
 cd isimo-weather-app/isimo-backend
-npm install
+yarn install
 # Create .env file with OPENWEATHER_API_KEY and DATABASE_URL
-npm start  # Runs on http://localhost:3000
+yarn start  # Runs on http://localhost:3000
 ```
 
 **Database:**
@@ -31,8 +39,8 @@ psql -U postgres -d isimo_weather -f database/schema.sql
 **Frontend:**
 ```bash
 cd isimo-weather-app/isimo-frontend
-npm install
-npm run dev  # Runs on http://localhost:5173
+yarn install
+yarn dev  # Runs on http://localhost:5173
 ```
 
 ## 📋 Requirements Checklist
@@ -62,7 +70,7 @@ npm run dev  # Runs on http://localhost:5173
 It contains:
 - Project overview and features
 - Technology stack details
-- Setup instructions for all components
+- Setup instructions for Docker and local development
 - Database schema with tables & columns
 - API response examples
 - Testing procedures
@@ -72,11 +80,16 @@ It contains:
 - Responsive design approach
 - Assumptions made
 
-## 🚀 Deployed Application
+## 🚀 Runtime Endpoints
 
+Docker (recommended for assessment):
+- **Frontend**: http://localhost:8080
+- **Backend API**: http://localhost:5000/api
+- **Database**: PostgreSQL (localhost:5432)
+
+Local development:
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:3000
-- **Database**: PostgreSQL (localhost:5432)
 
 ## 📁 Project Structure
 
